@@ -1,6 +1,7 @@
 import admin from "firebase-admin";
 
 const test = async (req, res) => {
+  // Initialize firebase app
   if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert({
@@ -15,13 +16,17 @@ const test = async (req, res) => {
     console.log("initialized!");
   }
 
-  // Fetch all users
-  const dbRef = admin.database().ref();
-  const usersRef = dbRef.child("users");
-  const usersQuery = await usersRef.once("value");
-  const users = usersQuery.val();
+  // Fetch data
+  const { docs } = await admin
+    .firestore()
+    .collection("testing")
+    .where("name", "==", "Finn")
+    .limit(1)
+    .get();
 
-  return res.json({ users });
+  const [firstDoc] = docs;
+
+  return res.json({ result: firstDoc?.data() });
 };
 
 export default test;
