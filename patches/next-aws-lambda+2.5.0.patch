@@ -1,0 +1,17 @@
+diff --git a/node_modules/next-aws-lambda/index.js b/node_modules/next-aws-lambda/index.js
+index f8daeb9..9085de7 100644
+--- a/node_modules/next-aws-lambda/index.js
++++ b/node_modules/next-aws-lambda/index.js
+@@ -1,7 +1,11 @@
+ const reqResMapper = require("./lib/compatLayer");
+ 
+-const handlerFactory = page => (event, _context, callback) => {
++const handlerFactory = page => (event, context, callback) => {
+   const { req, res, responsePromise } = reqResMapper(event, callback);
++
++  // Make Netlify Function context available on request object
++  req.functionContext = context
++
+   if (page.render instanceof Function) {
+     // Is a React component
+     page.render(req, res);

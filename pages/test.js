@@ -9,7 +9,19 @@ const TestPage = (props) => (
   </>
 );
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  // Get function context
+  const functionContext = context?.req?.functionContext;
+
+  // If we are currently in a Netlify function (deployed on netlify.app or
+  // locally with netlify dev), do not wait for empty event loop.
+  // See: https://stackoverflow.com/a/39215697/6451879
+  // Skip during next dev.
+  if (functionContext) {
+    console.log("Setting callbackWaitsForEmptyEventLoop: false");
+    functionContext.callbackWaitsForEmptyEventLoop = false;
+  }
+
   // Configuration for firebase
   const firebaseConfig = {
     apiKey: "AIzaSyBre20U7moSMgS5pCKSJsde2AIcssegRys",
