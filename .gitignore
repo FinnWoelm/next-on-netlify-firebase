@@ -5,3 +5,12 @@
 
 # Local Netlify folder
 .netlify
+
+.DS_Store
+
+out_functions
+out_publish
+
+.vscode
+
+lambda
